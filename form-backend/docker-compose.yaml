@@ -1,0 +1,46 @@
+x-common-variables:
+  &db-env-vars
+  SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/internation
+  SPRING_DATASOURCE_USERNAME: sheru
+  SPRING_DATASOURCE_PASSWORD: Shreyans@2801
+services:
+  db:
+    image: mysql:8.0
+    restart: always
+    # Suppresses not useful error messages
+    cap_add:
+      - SYS_NICE
+    environment:
+      MYSQL_ROOT_USER: root
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: internation
+      MYSQL_USER: sheru
+      MYSQL_PASSWORD: Shreyans@2801
+    ports:
+      - '33061:3306'
+    volumes:
+      - db-data:/var/lib/mysql
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    depends_on:
+      - db
+    environment:
+      *db-env-vars
+    networks:
+      - app-network
+    ports:
+      - 8085:8080
+
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  db-data:
+    driver: local
+
