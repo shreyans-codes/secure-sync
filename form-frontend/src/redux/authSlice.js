@@ -42,13 +42,7 @@ export const loginAsync = createAsyncThunk(
       const resp = await loginToAccount(userData);
       return resp;
     } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-      return thunkAPI.rejectWithValue(message);
+      return thunkAPI.rejectWithValue(error.message);
     }
   }
 );

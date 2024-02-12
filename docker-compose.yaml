@@ -4,25 +4,24 @@ services:
     container_name: mydb
     image: mysql:8.0
     restart: on-failure
-    env_file: ./.env
     cap_add:
       - SYS_NICE
     environment:
       MYSQL_ROOT_USER: root
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: $MYSQLDB_DATABASE
+      MYSQL_DATABASE: internation
       MYSQL_USER: sheru
       MYSQL_PASSWORD: Shreyans@2801
     networks:
       - app-network
     ports:
-      - $MYSQLDB_LOCAL_PORT:$MYSQLDB_DOCKER_PORT
+      - 33061:3306
     volumes:
       - db-data:/var/lib/mysql
 
   backend:
-    build: .
     restart: always
+    image: hudson123456/secure-sync-backend:0.0.1
     container_name: spring-backend
     depends_on:
       - db
@@ -33,17 +32,15 @@ services:
     networks:
       - app-network
     ports:
-      - $SPRING_LOCAL_PORT:$SPRING_DOCKER_PORT
+      - 8085:8080
 
   frontend:
     restart: on-failure
-    build:
-      context: ./../form-frontend
-      dockerfile: Dockerfile
+    image: hudson123456/secure-sync-frontend:0.0.1
     networks:
       - app-network
     ports:
-      - "5173:80"
+      - 5173:80
 
 networks:
   app-network:

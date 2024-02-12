@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -19,6 +20,7 @@ import java.util.*;
 @Getter
 @Setter
 @Table(name = "users")
+@DynamicUpdate
 public class User implements UserDetails {
 
     @Id
@@ -37,7 +39,7 @@ public class User implements UserDetails {
     @JsonIgnore
     private String secret;
 
-    @Column(name = "verification_code", length = 64)
+    @Column(length = 64)
     private String verificationCode;
 
     private boolean enabled;

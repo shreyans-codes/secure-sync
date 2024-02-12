@@ -17,7 +17,7 @@ export const registerUser = async (userData) => {
     });
     return response;
   } catch (error) {
-    throw new Error(error);
+    throw new Error(error.response.data);
   }
 };
 
@@ -44,10 +44,9 @@ export const loginToAccount = async (userData) => {
     }
     return [response.data, mfaEnabled];
   } catch (error) {
-    throw new Error(error);
+    throw new Error(error.response.data);
   }
 };
-
 
 export const fetchAccount = async () => {
   try {

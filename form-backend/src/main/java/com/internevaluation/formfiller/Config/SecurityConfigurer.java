@@ -67,6 +67,7 @@ public class SecurityConfigurer {
                         .email("internation.cyraacs+admin@gmail.com")
                         .enabled(true)
                         .mfaEnabled(false)
+                        .verificationCode("Code")
                         .password(passwordEncoder.encode("admin@internation"))
                         .files(new ArrayList<>())
                         .authorities(roleSet)

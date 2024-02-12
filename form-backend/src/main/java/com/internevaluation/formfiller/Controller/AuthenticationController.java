@@ -36,6 +36,7 @@ public class AuthenticationController {
     private static final Logger logError = LoggerFactory.getLogger(AuthenticationController.class);
 
 
+    @Autowired
     private final AuthenticationService authenticationService;
     @Autowired
     private CaptchaValidator validator;
@@ -54,7 +55,12 @@ public class AuthenticationController {
              {
         try {
             // Pass the siteURL to the register method
-            String siteURL = frontendUrl;
+            String siteURL;
+            if(frontendUrl.startsWith("http://localhost"))
+                siteURL = "http://localhost:8080";
+            else {
+                siteURL = frontendUrl + "/api";
+            }
             var response = authenticationService.registerUser(user, siteURL);
 
             if (user.isMfaEnabled())
@@ -72,7 +78,7 @@ public class AuthenticationController {
             }
         } catch (UserAlreadyExistsException e) {
             logInfo.error("User already exists for user: {}", user.getEmail());
-            return ResponseEntity.badRequest().body("User already exists in the system");
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             logError.error("An unexpected error occurred during registration for user: {}", user.getEmail(), e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unexpected error during registration");
@@ -108,32 +114,18 @@ public class AuthenticationController {
 
 
     @PostMapping("/login")
-    public LoginResponseDTO loginUser(@RequestBody LoginRequestDTO user, @RequestParam("g-recaptcha-response") String captcha) {
-        try {
+    public ResponseEntity<?> loginUser(@RequestBody LoginRequestDTO user, @RequestParam("g-recaptcha-response") String captcha) {
+
             // Validate ReCAPTCHA
             if (validator.isValid(captcha)) {
                 logInfo.info("ReCAPTCHA validation successful for user: {}", user.getEmail());
                 // Call the authentication service to perform the login
-                ResponseEntity<LoginResponseDTO> responseEntity = authenticationService.loginUser(user);
-
-                // Unwrap the LoginResponseDTO from the ResponseEntity
-                return responseEntity.getBody();
+                return authenticationService.loginUser(user);
             } else {
                 // Log ReCAPTCHA validation failure and throw a CaptchaValidationException
                 logError.error("ReCAPTCHA validation failed for user: {}", user.getEmail());
-                throw new CaptchaValidationException("CAPTCHA validation failed");
+                return ResponseEntity.badRequest().body("ReCAPTCHA validation failed. Please refresh and retry");
             }
-        } catch (CaptchaValidationException e) {
-            // Handle CaptchaValidationException
-            // Log the error and throw it to return a meaningful response to the client
-            logError.error("CAPTCHA validation failed for user: {}", user.getEmail(), e);
-            throw e;
-        } catch (Exception e) {
-            // Handle unexpected exceptions
-            // Log the error and throw it to return a meaningful response to the client
-            logError.error("An unexpected error occurred during login for user: {}", user.getEmail(), e);
-            throw new RuntimeException("Unexpected error during login");
-        }
     }
 
 

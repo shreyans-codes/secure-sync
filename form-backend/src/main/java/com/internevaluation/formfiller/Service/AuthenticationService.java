@@ -1,6 +1,7 @@
 package com.internevaluation.formfiller.Service;
 
 import com.internevaluation.formfiller.Controller.AuthenticationController;
+import com.internevaluation.formfiller.Exceptions.UserAlreadyExistsException;
 import com.internevaluation.formfiller.Model.*;
 import com.internevaluation.formfiller.Respository.RoleRepository;
 import com.internevaluation.formfiller.Respository.UserRepository;
@@ -32,8 +33,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
 public class AuthenticationService {
+    @Autowired
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
@@ -59,10 +60,26 @@ public class AuthenticationService {
     }
 
     public RegisterResponseDTO registerUser(RegisterUserRequest user, String siteURL)
-            throws RoleNotFoundException, MessagingException, UnsupportedEncodingException {
+            throws RoleNotFoundException, UserAlreadyExistsException, MessagingException, UnsupportedEncodingException {
         User newUser = new User();
         RegisterResponseDTO responseDTO = new RegisterResponseDTO();
         String encodedPassword = passwordEncoder.encode(user.getPassword());
+        if(userRepository.findByEmail(user.getEmail()).isPresent())
+        {
+            User existingUser = userRepository.findByEmail(user.getEmail()).get();
+            if(existingUser.isEnabled())
+                throw new UserAlreadyExistsException("User already exists. Please log in instead");
+            else {
+                String randomCode = UUID.randomUUID().toString();
+                existingUser.setVerificationCode(randomCode);
+                existingUser.setSecret("mktintumon");
+                // This code doesn't update the verification code for the user
+                userRepository.save(existingUser);
+                User savedUser = userRepository.findByEmail(existingUser.getEmail()).get();
+                sendVerificationEmail(existingUser, siteURL);
+                throw new UserAlreadyExistsException("Please verify email. Reverification email sent!");
+            }
+        }
         Role userRole = roleRepository.findByAuthority("USER")
                 .orElseThrow(() -> new RoleNotFoundException("Role not found"));
         Set<Role> roleSet = new HashSet<>();
@@ -100,7 +117,7 @@ public class AuthenticationService {
         String subject = "Please verify your registration";
 
         // Construct the verification link with the generated random code
-        String verifyURL = siteURL + "/api/auth/verify-email?code=" + user.getVerificationCode();
+        String verifyURL = siteURL + "/auth/verify-email?code=" + user.getVerificationCode();
 
         String content = "Dear " + user.getEmail() + ",<br>"
                 + "Please click the link below to verify your registration:<br>"
@@ -139,7 +156,7 @@ public class AuthenticationService {
         return false;
     }
 
-    public ResponseEntity<LoginResponseDTO> loginUser(LoginRequestDTO user) {
+    public ResponseEntity<?> loginUser(LoginRequestDTO user) {
         try {
             // Retrieve the user based on the provided email
             User receivedUser = userRepository.findByEmail(user.getEmail())
@@ -165,12 +182,12 @@ public class AuthenticationService {
             // Handle the case where no user is found or the user is not enabled
             // Log the error and throw an exception with a specific message
             logError.error("Error during user login for email: {}", user.getEmail(), e);
-            throw new RuntimeException("User not found or not verified");
+            return ResponseEntity.badRequest().body("User not found or email not verified");
         } catch (AuthenticationException e) {
             // Handle authentication exceptions
             // Log the error and throw an exception with a specific message
             logError.error("Error during user authentication for email: {}", user.getEmail(), e);
-            throw new RuntimeException("Authentication failed");
+            return ResponseEntity.badRequest().body("Credentials do not match");
         }
     }
 

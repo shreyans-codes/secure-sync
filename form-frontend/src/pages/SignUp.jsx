@@ -53,7 +53,7 @@ const SignUp = () => {
     };
     dispatch(registerAsync(userData)).then((res) => {
       if (res.type === "auth/register/rejected") {
-        toast.error(authState.message);
+        toast.error(res.payload);
         return;
       } else {
         if (mfaEnableRef.current.checked)

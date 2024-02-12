@@ -44,7 +44,7 @@ const LogInPage = () => {
       })
     ).then((res) => {
       if (res.type === "auth/login/rejected") {
-        toast.error(authState.message);
+        toast.error(res.payload);
       } else {
         if (authState.mfaEnabled) {
           navigate("/verify", {

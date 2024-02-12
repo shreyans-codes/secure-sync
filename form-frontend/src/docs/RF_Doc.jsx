@@ -56,11 +56,11 @@ const RF_Doc = async (formData) => {
           <Text style={styles.heading}>{"[Under Article 371(J)]"}</Text>
           <Text style={styles.paragraph}>
             This is to certify that Sri/Smt
-            <Text style={styles.boldText}> {formData.name}</Text> S/o/ W/o
-            {formData.sowo + " "} has been residing at the following address in
-            {formData.villageTown + " "} Village/Town of
-            {formData.district + " "} District: Taluka of{" "}
-            {formData.taluka + " "}
+            <Text style={styles.boldText}> {formData.name}</Text> S/o/ W/o{" "}
+            {" " + formData.sowo + " "} has been residing at the following
+            address in {" " + formData.villageTown + " "} Village/Town of
+            {" " + formData.district + " "} District: Taluka of{" "}
+            {" " + formData.taluka + " "}
             District during the period noted below
             {": "}
           </Text>

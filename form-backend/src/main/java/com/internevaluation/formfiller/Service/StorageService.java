@@ -69,8 +69,8 @@ public class StorageService {
     public String uploadFileToFileSystem(MultipartFile file, String userId, MultipartFile artefactFile) throws IOException {
 
         User user = userRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("User not found"));
-        final String FOLDER_PATH = String.format("C:/Users/%s/Desktop/MyFiles/", directoryPath);
-        final String ARTEFACT_PATH = String.format("C:/Users/%s/Desktop/MyFiles/artefact/", directoryPath);
+        final String FOLDER_PATH = String.format("%s/files/", directoryPath);
+        final String ARTEFACT_PATH = String.format("%s/artefact/", directoryPath);
 
         String filePath = FOLDER_PATH + file.getOriginalFilename();
         FileData fileData;
