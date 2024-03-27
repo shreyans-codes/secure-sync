@@ -18,3 +18,4 @@ docker-compose up
 >Note: The backend will restart a couple of times, let it. 
 >It waits for the MySQL to start
 
+The application runs on `localhost:5173`
