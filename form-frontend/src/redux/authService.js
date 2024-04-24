@@ -2,10 +2,10 @@ import axios from "axios";
 import { IS_PROD } from "../variables/modifiers";
 
 export const BASE_AUTH_URL = IS_PROD
-  ? "/api/auth"
+  ? "https://secure-sync-production.up.railway.app/auth"
   : "http://localhost:8080/auth";
 export const BASE_APPLICATION_URL = IS_PROD
-  ? "/api/todo"
+  ? "https://secure-sync-production.up.railway.app/todo"
   : "http://localhost:8080/todo";
 
 export const registerUser = async (userData) => {
