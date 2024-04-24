@@ -45,6 +45,9 @@ public class AuthenticationController {
     @Value("${frontend.url}")
     private String frontendUrl;
 
+    @Value("${backend.url}")
+    private String backendUrl;
+
     public AuthenticationController(AuthenticationService authenticationService) {
         this.authenticationService = authenticationService;
     }
@@ -59,7 +62,7 @@ public class AuthenticationController {
             if(frontendUrl.startsWith("http://localhost"))
                 siteURL = "http://localhost:8080";
             else {
-                siteURL = frontendUrl + "/api";
+                siteURL = backendUrl;
             }
             var response = authenticationService.registerUser(user, siteURL);
 
