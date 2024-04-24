@@ -133,11 +133,7 @@ const LogInPage = () => {
               height: "76px",
               borderRadius: "3px",
             }}
-            sitekey={
-              IS_HOSTED
-                ? "6Lc3xNIoAAAAAEpOiFtwUjuN7uRfzD-kYea7GAGe"
-                : "6Lc3xNIoAAAAAEpOiFtwUjuN7uRfzD-kYea7GAGe"
-            }
+            sitekey={"6Lct5ScpAAAAAHVISfRd2LvEjihktk2OMT1ZmO4z"}
             onChange={handleRecaptcha}
           />
         </div>
