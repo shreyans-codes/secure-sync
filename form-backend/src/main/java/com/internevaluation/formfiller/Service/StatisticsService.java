@@ -63,7 +63,7 @@ public class StatisticsService {
         }
     }
 
-    @Scheduled(fixedRate = 86400000) // 1 day in milliseconds
+    // @Scheduled(fixedRate = 86400000) // 1 day in milliseconds
     public void sendStatisticsEmail() {
         try {
             StatisticsEntity updatedEntity = updateCounts();
