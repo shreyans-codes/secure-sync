@@ -9,12 +9,12 @@ import org.springframework.web.client.RestTemplate;
 public class CaptchaValidator {
     @Autowired
     private RestTemplate rt;
-    public  Boolean isValid(String captcha){
-//        String url="https://www.google.com/recaptcha/api/siteverify";
-//        String params="?secret=6Lc3xNIoAAAAAANlgT8i0RjlWHk_7-UNGaV5-zdS&response="+captcha;
-//
-//        CaptchaResponse cr=rt.postForObject(url+params,null, CaptchaResponse.class);
-//        return cr.isSuccess();
-        return true;
+
+    public Boolean isValid(String captcha) {
+        String url = "https://www.google.com/recaptcha/api/siteverify";
+        String params = "?secret=6Lct5ScpAAAAAH86H4e5ug1O2m6iTO9SIB6HXMyN&response=" + captcha;
+
+        CaptchaResponse cr = rt.postForObject(url + params, null, CaptchaResponse.class);
+        return cr.isSuccess();
     }
 }

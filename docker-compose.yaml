@@ -32,7 +32,7 @@ services:
     networks:
       - app-network
     ports:
-      - 8085:8080
+      - 8080:8080
 
   frontend:
     restart: on-failure
@@ -40,7 +40,7 @@ services:
     networks:
       - app-network
     ports:
-      - 5173:80
+      - 5173:80`
 
 networks:
   app-network:
