@@ -81,7 +81,7 @@ const LogInPage = () => {
       style={{
         height: "100vh",
         position: "relative",
-        backgroundImage: `url("https://source.unsplash.com/random?wallpapers")`,
+        backgroundImage: `url("https://api.unsplash.com/photos/random")`,
         backgroundSize: "cover",
         backgroundPosition: "top",
         display: "flex",
