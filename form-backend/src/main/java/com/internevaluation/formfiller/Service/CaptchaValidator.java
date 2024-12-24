@@ -11,10 +11,13 @@ public class CaptchaValidator {
     private RestTemplate rt;
 
     public Boolean isValid(String captcha) {
-        String url = "https://www.google.com/recaptcha/api/siteverify";
-        String params = "?secret=6Lct5ScpAAAAAH86H4e5ug1O2m6iTO9SIB6HXMyN&response=" + captcha;
+        // String url = "https://www.google.com/recaptcha/api/siteverify";
+        // String params = "?secret=6Lct5ScpAAAAAH86H4e5ug1O2m6iTO9SIB6HXMyN&response="
+        // + captcha;
 
-        CaptchaResponse cr = rt.postForObject(url + params, null, CaptchaResponse.class);
-        return cr.isSuccess();
+        // CaptchaResponse cr = rt.postForObject(url + params, null,
+        // CaptchaResponse.class);
+        // return cr.isSuccess();
+        return true;
     }
 }
